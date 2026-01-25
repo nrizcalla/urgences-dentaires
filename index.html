@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Urgences Cabinet Dentaire</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0d14;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #252542;
+            --accent-red: #ff3b5c;
+            --accent-orange: #ff8c42;
+            --accent-yellow: #ffd166;
+            --accent-green: #06d6a0;
+            --accent-blue: #118ab2;
+            --accent-purple: #9d4edd;
+            --accent-pink: #ff69b4;
+            --accent-cyan: #00f5d4;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --danger: #ff3b5c;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --radius: 16px;
+            --radius-lg: 24px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 40px rgba(255,59,92,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .app {
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 20px;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, transparent 100%);
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .call-144-header {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(255,59,92,0.4);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .call-144-header:active {
+            transform: scale(0.95);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Screen management */
+        .screen {
+            display: none;
+            min-height: 100%;
+            padding: 0 20px 100px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home screen */
+        .home-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .home-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .home-title p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .emergency-btn {
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            padding: 20px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .emergency-btn:active {
+            transform: scale(0.97);
+        }
+
+        .emergency-btn .icon {
+            font-size: 2.2rem;
+            line-height: 1;
+        }
+
+        .emergency-btn .label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .emergency-btn[data-type="acr"] { border-color: var(--accent-red); background: linear-gradient(135deg, rgba(255,59,92,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="obstruction"] { border-color: var(--accent-orange); background: linear-gradient(135deg, rgba(255,140,66,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="anaphylaxie"] { border-color: var(--accent-purple); background: linear-gradient(135deg, rgba(157,78,221,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="asthme"] { border-color: var(--accent-cyan); background: linear-gradient(135deg, rgba(0,245,212,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="infarctus"] { border-color: var(--accent-pink); background: linear-gradient(135deg, rgba(255,105,180,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="avc"] { border-color: var(--accent-blue); background: linear-gradient(135deg, rgba(17,138,178,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="epilepsie"] { border-color: var(--accent-yellow); background: linear-gradient(135deg, rgba(255,209,102,0.15) 0%, var(--bg-card) 100%); }
+        .emergency-btn[data-type="syncope"] { border-color: var(--accent-green); background: linear-gradient(135deg, rgba(6,214,160,0.15) 0%, var(--bg-card) 100%); }
+
+        /* Quick tools */
+        .quick-tools {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .quick-tool-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .quick-tool-btn:active {
+            transform: scale(0.97);
+            background: var(--bg-card-hover);
+        }
+
+        .quick-tool-btn .tool-icon {
+            font-size: 1.5rem;
+        }
+
+        .quick-tool-btn .tool-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Detail screen */
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-top: 8px;
+        }
+
+        .back-btn {
+            background: var(--bg-card);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        .back-btn:active {
+            background: var(--bg-card-hover);
+        }
+
+        .detail-title {
+            flex: 1;
+        }
+
+        .detail-title h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-title h2 .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Timer */
+        .timer-bar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--accent-yellow);
+        }
+
+        .timer-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timer-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-btn:active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.3s ease;
+        }
+
+        .step-card.completed {
+            opacity: 0.5;
+            border-left-color: var(--success);
+        }
+
+        .step-card.current {
+            border-left-color: var(--accent-yellow);
+            box-shadow: 0 0 30px rgba(255,209,102,0.2);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background: var(--accent-blue);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .step-card.current .step-number {
+            background: var(--accent-yellow);
+            color: var(--bg-dark);
+        }
+
+        .step-card.completed .step-number {
+            background: var(--success);
+        }
+
+        .step-check {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .step-card.completed .step-check {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .step-highlight {
+            background: rgba(255,209,102,0.15);
+            border: 1px solid rgba(255,209,102,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--accent-yellow);
+        }
+
+        .step-dosage {
+            background: rgba(157,78,221,0.15);
+            border: 1px solid rgba(157,78,221,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--accent-purple);
+        }
+
+        /* Metronome screen */
+        .metronome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .metronome-visual {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 4px solid var(--accent-red);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: all 0.1s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .metronome-visual.beat {
+            transform: scale(1.05);
+            background: rgba(255,59,92,0.2);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .metronome-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .metronome-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .metronome-phase {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            margin-bottom: 8px;
+        }
+
+        .metronome-bpm {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .metronome-info {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .metronome-info p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .metronome-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .metronome-info strong {
+            color: var(--text-primary);
+        }
+
+        .metronome-controls {
+            display: flex;
+            gap: 16px;
+        }
+
+        .metronome-btn {
+            background: var(--accent-red);
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .metronome-btn:active {
+            transform: scale(0.95);
+        }
+
+        .metronome-btn.secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .metronome-btn.running {
+            background: var(--success);
+        }
+
+        /* Trousse screen */
+        .trousse-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .trousse-item {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .trousse-icon {
+            font-size: 1.8rem;
+            width: 50px;
+            text-align: center;
+        }
+
+        .trousse-info {
+            flex: 1;
+        }
+
+        .trousse-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .trousse-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .trousse-dosage {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-purple);
+            background: rgba(157,78,221,0.15);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        /* Call 144 bottom button */
+        .call-144-bottom {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: var(--radius);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(255,59,92,0.5);
+            z-index: 1000;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .call-144-bottom:active {
+            transform: scale(0.98);
+        }
+
+        .call-144-bottom.hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        /* Audio context notice */
+        .audio-notice {
+            background: rgba(255,209,102,0.15);
+            border: 1px solid rgba(255,209,102,0.3);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--accent-yellow);
+            text-align: center;
+        }
+
+        /* PWA install prompt */
+        .install-prompt {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        .install-prompt p {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .install-btn {
+            background: var(--accent-blue);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (min-width: 500px) {
+            .emergency-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .call-144-bottom {
+                max-width: 400px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .call-144-bottom:active {
+                transform: translateX(-50%) scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🦷</div>
+                    <span>Urgences Dentaires</span>
+                </div>
+                <a href="tel:144" class="call-144-header">
+                    📞 144
+                </a>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Home Screen -->
+            <section id="home-screen" class="screen active">
+                <div class="home-title">
+                    <h1>Quelle urgence ?</h1>
+                    <p>Sélectionnez pour être guidé</p>
+                </div>
+
+                <div class="emergency-grid">
+                    <button class="emergency-btn" data-type="acr" onclick="showEmergency('acr')">
+                        <span class="icon">🫀</span>
+                        <span class="label">Arrêt Cardiaque</span>
+                    </button>
+                    <button class="emergency-btn" data-type="obstruction" onclick="showEmergency('obstruction')">
+                        <span class="icon">🫁</span>
+                        <span class="label">Obstruction Voies Aériennes</span>
+                    </button>
+                    <button class="emergency-btn" data-type="anaphylaxie" onclick="showEmergency('anaphylaxie')">
+                        <span class="icon">💉</span>
+                        <span class="label">Anaphylaxie</span>
+                    </button>
+                    <button class="emergency-btn" data-type="asthme" onclick="showEmergency('asthme')">
+                        <span class="icon">🌬️</span>
+                        <span class="label">Crise d'Asthme</span>
+                    </button>
+                    <button class="emergency-btn" data-type="infarctus" onclick="showEmergency('infarctus')">
+                        <span class="icon">💔</span>
+                        <span class="label">Infarctus / SCA</span>
+                    </button>
+                    <button class="emergency-btn" data-type="avc" onclick="showEmergency('avc')">
+                        <span class="icon">🧠</span>
+                        <span class="label">AVC</span>
+                    </button>
+                    <button class="emergency-btn" data-type="epilepsie" onclick="showEmergency('epilepsie')">
+                        <span class="icon">⚡</span>
+                        <span class="label">Épilepsie</span>
+                    </button>
+                    <button class="emergency-btn" data-type="syncope" onclick="showEmergency('syncope')">
+                        <span class="icon">😵</span>
+                        <span class="label">Syncope</span>
+                    </button>
+                </div>
+
+                <div class="quick-tools">
+                    <button class="quick-tool-btn" onclick="showScreen('metronome-screen')">
+                        <span class="tool-icon">🎵</span>
+                        <span class="tool-label">Métronome RCP</span>
+                    </button>
+                    <button class="quick-tool-btn" onclick="showScreen('trousse-screen')">
+                        <span class="tool-icon">🧰</span>
+                        <span class="tool-label">Trousse d'Urgence</span>
+                    </button>
+                </div>
+
+                <div class="install-prompt" id="install-prompt">
+                    <p>📱 Installez l'app pour un accès hors-ligne</p>
+                    <button class="install-btn" id="install-btn">Installer</button>
+                </div>
+            </section>
+
+            <!-- Emergency Detail Screen -->
+            <section id="detail-screen" class="screen">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+                    <div class="detail-title">
+                        <h2 id="detail-title"><span class="icon">🫀</span> Arrêt Cardiaque</h2>
+                    </div>
+                </div>
+
+                <div class="timer-bar">
+                    <div>
+                        <div class="timer-label">Temps écoulé</div>
+                        <div class="timer-display" id="timer-display">00:00</div>
+                    </div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle">▶️</button>
+                        <button class="timer-btn" onclick="resetTimer()">🔄</button>
+                    </div>
+                </div>
+
+                <div class="steps-container" id="steps-container">
+                    <!-- Steps will be injected here -->
+                </div>
+            </section>
+
+            <!-- Metronome Screen -->
+            <section id="metronome-screen" class="screen">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+                    <div class="detail-title">
+                        <h2>🎵 Métronome RCP</h2>
+                    </div>
+                </div>
+
+                <div class="audio-notice">
+                    🔊 Activez le son pour le signal sonore
+                </div>
+
+                <div class="metronome-container">
+                    <div class="metronome-phase" id="metronome-phase">COMPRESSIONS</div>
+                    <div class="metronome-visual" id="metronome-visual">
+                        <div class="metronome-count" id="metronome-count">30</div>
+                        <div class="metronome-label">compressions</div>
+                    </div>
+                    <div class="metronome-bpm">110 BPM — "Staying Alive" 🎵</div>
+
+                    <div class="metronome-info">
+                        <p><strong>30 compressions</strong> puis <strong>2 insufflations</strong></p>
+                        <p>Profondeur : 5-6 cm</p>
+                        <p>Relâchement complet entre chaque</p>
+                    </div>
+
+                    <div class="metronome-controls">
+                        <button class="metronome-btn" id="metronome-btn" onclick="toggleMetronome()">
+                            ▶️ Démarrer
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trousse Screen -->
+            <section id="trousse-screen" class="screen">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">←</button>
+                    <div class="detail-title">
+                        <h2>🧰 Trousse d'Urgence</h2>
+                    </div>
+                </div>
+
+                <div class="trousse-grid">
+                    <div class="trousse-item">
+                        <div class="trousse-icon">💉</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Adrénaline (EpiPen)</div>
+                            <div class="trousse-detail">Anaphylaxie, asthme sévère — IM cuisse</div>
+                        </div>
+                        <div class="trousse-dosage">0.3mg adulte<br>0.15mg enfant</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">🌬️</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Salbutamol (Ventolin)</div>
+                            <div class="trousse-detail">Crise d'asthme — Inhalé</div>
+                        </div>
+                        <div class="trousse-dosage">2 bouffées<br>renouvelable</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">💊</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Aspirine soluble</div>
+                            <div class="trousse-detail">Syndrome coronarien aigu — PO</div>
+                        </div>
+                        <div class="trousse-dosage">250 mg</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">❤️</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Trinitrine spray (Isoket)</div>
+                            <div class="trousse-detail">Douleur thoracique (si TA OK) — Sublingual</div>
+                        </div>
+                        <div class="trousse-dosage">1-2 pulv.</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">🍬</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Glucose</div>
+                            <div class="trousse-detail">Hypoglycémie — PO</div>
+                        </div>
+                        <div class="trousse-dosage">Sucre, jus</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">🫁</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Oxygène + masque</div>
+                            <div class="trousse-detail">Oxygénation, ventilation assistée</div>
+                        </div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">⚡</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Défibrillateur (DAE)</div>
+                            <div class="trousse-detail">Arrêt cardiaque — Rythme choquable</div>
+                        </div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-icon">📊</div>
+                        <div class="trousse-info">
+                            <div class="trousse-name">Saturomètre</div>
+                            <div class="trousse-detail">Mesure SpO2 et fréquence cardiaque</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom call button -->
+        <a href="tel:144" class="call-144-bottom" id="call-144-bottom">
+            📞 APPELER LE 144
+        </a>
+    </div>
+
+    <script>
+        // Emergency data
+        const emergencies = {
+            acr: {
+                title: "🫀 Arrêt Cardiaque (ACR)",
+                color: "var(--accent-red)",
+                steps: [
+                    {
+                        title: "Sécurité et conscience",
+                        content: "Vérifier la sécurité de l'environnement. Stimuler le patient : \"Est-ce que ça va ?\"",
+                    },
+                    {
+                        title: "Appeler à l'aide",
+                        content: "Crier pour alerter l'équipe. Demander le DAE.",
+                        highlight: "Appeler le 144 immédiatement"
+                    },
+                    {
+                        title: "Libérer les voies aériennes",
+                        content: "Basculer la tête en arrière, soulever le menton. Vérifier la respiration (10 sec max).",
+                    },
+                    {
+                        title: "Débuter le massage cardiaque",
+                        content: "30 compressions au milieu du thorax, puis 2 insufflations. Profondeur 5-6 cm, fréquence 100-120/min.",
+                        highlight: "🎵 Rythme \"Staying Alive\" (110 BPM)"
+                    },
+                    {
+                        title: "Utiliser le DAE",
+                        content: "Dès qu'il arrive : allumer, poser les électrodes sur peau nue, suivre les instructions vocales.",
+                    },
+                    {
+                        title: "Continuer jusqu'aux secours",
+                        content: "Alterner 30 compressions / 2 insufflations. Ne jamais abandonner. Relayer si fatigue.",
+                        highlight: "Chaque minute compte !"
+                    }
+                ]
+            },
+            obstruction: {
+                title: "🫁 Obstruction Voies Aériennes",
+                color: "var(--accent-orange)",
+                steps: [
+                    {
+                        title: "Évaluer la situation",
+                        content: "Le patient parle-t-il ? Tousse-t-il efficacement ? Présente-t-il une détresse respiratoire ?",
+                        highlight: "Toux efficace = NE PAS intervenir, encourager à tousser"
+                    },
+                    {
+                        title: "Si obstruction partielle",
+                        content: "Patient peut parler/tousser → Encourager la toux, surveiller. Ne pas intervenir tant que la toux est efficace.",
+                    },
+                    {
+                        title: "Si obstruction complète",
+                        content: "Patient SILENCIEUX, ne peut pas parler ni tousser, cyanose → Agir immédiatement !",
+                        highlight: "Appeler le 144"
+                    },
+                    {
+                        title: "5 claques dorsales",
+                        content: "Se placer sur le côté, pencher le patient en avant. 5 claques fermes entre les omoplates avec le talon de la main.",
+                    },
+                    {
+                        title: "5 compressions abdominales (Heimlich)",
+                        content: "Se placer derrière, poing entre sternum et ombilic, compressions rapides vers l'arrière et le haut.",
+                    },
+                    {
+                        title: "Alterner jusqu'à expulsion",
+                        content: "Continuer 5 claques / 5 Heimlich. Si inconscience → RCP immédiate.",
+                        highlight: "Si ACR : massage cardiaque sans délai"
+                    }
+                ]
+            },
+            anaphylaxie: {
+                title: "💉 Choc Anaphylactique",
+                color: "var(--accent-purple)",
+                steps: [
+                    {
+                        title: "Reconnaître l'anaphylaxie",
+                        content: "Début rapide après exposition. Signes : urticaire, œdème, dyspnée, sifflements, hypotension, malaise.",
+                        highlight: "Dégradation possible et EXPLOSIVE"
+                    },
+                    {
+                        title: "ADRÉNALINE immédiate",
+                        content: "Injection IM face antérolatérale de la cuisse. À travers les vêtements si nécessaire.",
+                        dosage: "Adulte : 0.3 mg (EpiPen)\nEnfant : 0.15 mg"
+                    },
+                    {
+                        title: "Appeler le 144",
+                        content: "Urgence vitale, transport médicalisé nécessaire.",
+                        highlight: "Appel IMMÉDIAT"
+                    },
+                    {
+                        title: "Position adaptée",
+                        content: "Allonger le patient, jambes surélevées. Si dyspnée : position demi-assise.",
+                    },
+                    {
+                        title: "Oxygène haut débit",
+                        content: "Si disponible, administrer O2 au masque.",
+                    },
+                    {
+                        title: "Préparer une 2e dose",
+                        content: "L'adrénaline peut être répétée après 5-15 min si pas d'amélioration.",
+                        highlight: "⚠️ Risque de rechute — Surveillance prolongée"
+                    }
+                ]
+            },
+            asthme: {
+                title: "🌬️ Crise d'Asthme",
+                color: "var(--accent-cyan)",
+                steps: [
+                    {
+                        title: "Arrêter le soin",
+                        content: "Retirer tout matériel de la bouche. Rassurer le patient.",
+                    },
+                    {
+                        title: "Position demi-assise",
+                        content: "Installer le patient assis, légèrement penché en avant, bras en appui.",
+                    },
+                    {
+                        title: "Salbutamol (Ventolin)",
+                        content: "Administrer 2 bouffées. Laisser le patient inhaler profondément.",
+                        dosage: "2 bouffées — renouvelable"
+                    },
+                    {
+                        title: "Oxygène si disponible",
+                        content: "Administrer O2 au masque si présent au cabinet.",
+                    },
+                    {
+                        title: "Évaluer l'évolution",
+                        content: "Amélioration → surveillance. Persistance → renouveler Ventolin 2 bouffées.",
+                        highlight: "Appel 144 si : cyanose, sueur, tirage, ne peut pas parler"
+                    },
+                    {
+                        title: "Signes de gravité → 144",
+                        content: "O2 à 9L/min, surveiller FR et SpO2. Possibilité Terbutaline 0.5mg SC sur avis 144.",
+                        highlight: "L'adrénaline fonctionne aussi (bronchodilatateur)"
+                    }
+                ]
+            },
+            infarctus: {
+                title: "💔 Infarctus / SCA",
+                color: "var(--accent-pink)",
+                steps: [
+                    {
+                        title: "Reconnaître les signes",
+                        content: "Douleur thoracique constrictive, irradiation bras/mâchoire, dyspnée, sueurs, nausées.",
+                        highlight: "Signes parfois différents chez la femme"
+                    },
+                    {
+                        title: "Arrêter le soin",
+                        content: "Repos strict. Ne pas laisser le patient se lever ou marcher.",
+                    },
+                    {
+                        title: "Appeler le 144",
+                        content: "Urgence cardiologique, chaque minute compte.",
+                        highlight: "APPEL IMMÉDIAT"
+                    },
+                    {
+                        title: "Aspirine soluble",
+                        content: "Si non contre-indiquée (pas d'allergie, pas de saignement actif).",
+                        dosage: "250 mg à croquer/sucer"
+                    },
+                    {
+                        title: "Trinitrine sublinguale",
+                        content: "Si tension artérielle correcte (> 100 mmHg systolique).",
+                        dosage: "1-2 pulvérisations Isoket"
+                    },
+                    {
+                        title: "Surveillance continue",
+                        content: "Oxygène si disponible. Préparer à une éventuelle RCP si ACR.",
+                        highlight: "Le temps conditionne le pronostic"
+                    }
+                ]
+            },
+            avc: {
+                title: "🧠 AVC",
+                color: "var(--accent-blue)",
+                steps: [
+                    {
+                        title: "Reconnaître — Test BE-FAST",
+                        content: "B: Balance (équilibre), E: Eyes (vision), F: Face (asymétrie), A: Arms (faiblesse), S: Speech (parole), T: Time (appeler !)",
+                        highlight: "Déficit neurologique BRUTAL = AVC"
+                    },
+                    {
+                        title: "Noter l'heure de début",
+                        content: "CRUCIAL pour la décision de thrombolyse. Noter l'heure exacte d'apparition des symptômes.",
+                        highlight: "⏰ NOTER L'HEURE !"
+                    },
+                    {
+                        title: "Appeler le 144",
+                        content: "Urgence neurologique temps-dépendante.",
+                        highlight: "APPEL IMMÉDIAT"
+                    },
+                    {
+                        title: "Position adaptée",
+                        content: "Installer au repos, tête légèrement surélevée (30°). Ne rien donner à boire ni manger.",
+                    },
+                    {
+                        title: "Surveillance continue",
+                        content: "Surveiller conscience, respiration. Rassurer le patient.",
+                    },
+                    {
+                        title: "Attendre les secours",
+                        content: "Ne pas donner de médicament. Être prêt à communiquer l'heure de début aux secours.",
+                        highlight: "Chaque minute = neurones perdus"
+                    }
+                ]
+            },
+            epilepsie: {
+                title: "⚡ Crise d'Épilepsie",
+                color: "var(--accent-yellow)",
+                steps: [
+                    {
+                        title: "Protéger le patient",
+                        content: "Éloigner les objets dangereux. Amortir la tête si possible. NE PAS essayer de maintenir le patient.",
+                        highlight: "NE RIEN METTRE DANS LA BOUCHE"
+                    },
+                    {
+                        title: "Libérer l'espace",
+                        content: "Écarter les objets, desserrer col/ceinture. Laisser la crise se dérouler.",
+                    },
+                    {
+                        title: "Noter l'heure de début",
+                        content: "Important pour évaluer la durée de la crise.",
+                        highlight: "⏰ Déclencher le chrono"
+                    },
+                    {
+                        title: "Après la crise — PLS",
+                        content: "Position latérale de sécurité. Surveiller la respiration. Phase post-critique : confusion normale.",
+                    },
+                    {
+                        title: "Rassurer le patient",
+                        content: "Au réveil, parler calmement. Le patient peut être confus et fatigué.",
+                    },
+                    {
+                        title: "Quand appeler le 144 ?",
+                        content: "1ère crise, crise > 5 min, crises répétées, traumatisme associé, pas de récupération.",
+                        highlight: "Seuil d'appel BAS"
+                    }
+                ]
+            },
+            syncope: {
+                title: "😵 Syncope",
+                color: "var(--accent-green)",
+                steps: [
+                    {
+                        title: "Sécuriser le patient",
+                        content: "Éviter la chute. Si possible, accompagner vers le sol en douceur.",
+                    },
+                    {
+                        title: "Position allongée",
+                        content: "Allonger le patient, surélever les jambes (favorise le retour veineux).",
+                    },
+                    {
+                        title: "Libérer les voies aériennes",
+                        content: "Desserrer col, ceinture. Vérifier la respiration.",
+                    },
+                    {
+                        title: "Évaluer la récupération",
+                        content: "Syncope vagale = récupération rapide (< 1 min). Pâleur, puis retour des couleurs.",
+                        highlight: "Penser à l'hypoglycémie"
+                    },
+                    {
+                        title: "Si récupération rapide",
+                        content: "Rassurer, proposer eau sucrée. Garder allongé quelques minutes avant de se relever.",
+                    },
+                    {
+                        title: "Appeler 144 si...",
+                        content: "Pas de récupération rapide, perte de connaissance prolongée, convulsions, douleur thoracique, dyspnée.",
+                        highlight: "Dans le doute → appeler tôt"
+                    }
+                ]
+            }
+        };
+
+        // Timer state
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let timerRunning = false;
+
+        // Metronome state
+        let metronomeInterval = null;
+        let metronomeRunning = false;
+        let compressionCount = 0;
+        let isCompressionPhase = true;
+        let audioContext = null;
+
+        // Current screen
+        let currentScreen = 'home-screen';
+
+        // Show screen
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+
+            // Show/hide bottom call button
+            const callBtn = document.getElementById('call-144-bottom');
+            if (screenId === 'home-screen') {
+                callBtn.classList.add('hidden');
+            } else {
+                callBtn.classList.remove('hidden');
+            }
+
+            // Stop metronome if leaving that screen
+            if (screenId !== 'metronome-screen' && metronomeRunning) {
+                stopMetronome();
+            }
+
+            // Scroll to top
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        // Show emergency detail
+        function showEmergency(type) {
+            const emergency = emergencies[type];
+            if (!emergency) return;
+
+            document.getElementById('detail-title').innerHTML = emergency.title;
+            
+            const stepsContainer = document.getElementById('steps-container');
+            stepsContainer.innerHTML = emergency.steps.map((step, index) => `
+                <div class="step-card ${index === 0 ? 'current' : ''}" data-step="${index}">
+                    <div class="step-header">
+                        <span class="step-number">${index + 1}</span>
+                        <button class="step-check" onclick="toggleStep(${index})">✓</button>
+                    </div>
+                    <div class="step-content">
+                        <h3>${step.title}</h3>
+                        <p>${step.content}</p>
+                        ${step.highlight ? `<div class="step-highlight">⚠️ ${step.highlight}</div>` : ''}
+                        ${step.dosage ? `<div class="step-dosage">💊 ${step.dosage}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // Reset and start timer
+            resetTimer();
+            startTimer();
+
+            showScreen('detail-screen');
+        }
+
+        // Toggle step completion
+        function toggleStep(index) {
+            const steps = document.querySelectorAll('.step-card');
+            const step = steps[index];
+            
+            if (step.classList.contains('completed')) {
+                step.classList.remove('completed');
+            } else {
+                step.classList.add('completed');
+                step.classList.remove('current');
+                
+                // Find next uncompleted step
+                const nextStep = document.querySelector('.step-card:not(.completed)');
+                if (nextStep) {
+                    nextStep.classList.add('current');
+                }
+            }
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (timerRunning) return;
+            timerRunning = true;
+            document.getElementById('timer-toggle').textContent = '⏸️';
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            timerRunning = false;
+            document.getElementById('timer-toggle').textContent = '▶️';
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function toggleTimer() {
+            if (timerRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Metronome functions
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        function playBeep(frequency = 800, duration = 50) {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+
+        function startMetronome() {
+            initAudio();
+            metronomeRunning = true;
+            compressionCount = 0;
+            isCompressionPhase = true;
+            
+            document.getElementById('metronome-btn').textContent = '⏹️ Arrêter';
+            document.getElementById('metronome-btn').classList.add('running');
+            
+            updateMetronomeDisplay();
+            
+            // 110 BPM = 545ms between beats
+            metronomeInterval = setInterval(() => {
+                if (isCompressionPhase) {
+                    compressionCount++;
+                    playBeep(compressionCount === 30 ? 1200 : 800);
+                    
+                    if (compressionCount >= 30) {
+                        isCompressionPhase = false;
+                        compressionCount = 0;
+                        setTimeout(() => {
+                            playBeep(600, 200);
+                        }, 300);
+                    }
+                } else {
+                    compressionCount++;
+                    playBeep(600, 150);
+                    
+                    if (compressionCount >= 2) {
+                        isCompressionPhase = true;
+                        compressionCount = 0;
+                    }
+                }
+                
+                updateMetronomeDisplay();
+            }, 545);
+        }
+
+        function stopMetronome() {
+            metronomeRunning = false;
+            if (metronomeInterval) {
+                clearInterval(metronomeInterval);
+                metronomeInterval = null;
+            }
+            
+            document.getElementById('metronome-btn').textContent = '▶️ Démarrer';
+            document.getElementById('metronome-btn').classList.remove('running');
+            
+            compressionCount = 0;
+            isCompressionPhase = true;
+            updateMetronomeDisplay();
+        }
+
+        function toggleMetronome() {
+            if (metronomeRunning) {
+                stopMetronome();
+            } else {
+                startMetronome();
+            }
+        }
+
+        function updateMetronomeDisplay() {
+            const visual = document.getElementById('metronome-visual');
+            const count = document.getElementById('metronome-count');
+            const phase = document.getElementById('metronome-phase');
+            
+            if (isCompressionPhase) {
+                phase.textContent = 'COMPRESSIONS';
+                phase.style.color = 'var(--accent-red)';
+                count.textContent = compressionCount || 30;
+                document.querySelector('#metronome-visual .metronome-label').textContent = 
+                    compressionCount ? `/ 30` : 'compressions';
+            } else {
+                phase.textContent = 'INSUFFLATIONS';
+                phase.style.color = 'var(--accent-blue)';
+                count.textContent = compressionCount || 2;
+                document.querySelector('#metronome-visual .metronome-label').textContent = 
+                    compressionCount ? `/ 2` : 'insufflations';
+            }
+            
+            // Visual beat effect
+            visual.classList.add('beat');
+            setTimeout(() => visual.classList.remove('beat'), 100);
+        }
+
+        // PWA Install
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-prompt').classList.add('show');
+        });
+
+        document.getElementById('install-btn')?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            document.getElementById('install-prompt').classList.remove('show');
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed'));
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide call button on home
+            document.getElementById('call-144-bottom').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
