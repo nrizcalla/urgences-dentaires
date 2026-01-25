@@ -41,6 +41,69 @@
             --shadow-glow: 0 0 40px rgba(255,59,92,0.3);
         }
 
+        /* Light theme */
+        [data-theme="light"] {
+            --bg-dark: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f0f2;
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a6e;
+            --text-muted: #8a8a9a;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-glow: 0 0 30px rgba(255,59,92,0.2);
+        }
+
+        [data-theme="light"] .emergency-btn[data-type="acr"] { 
+            border-color: var(--accent-red); 
+            background: linear-gradient(135deg, rgba(255,59,92,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="syncope"] { 
+            border-color: var(--accent-green); 
+            background: linear-gradient(135deg, rgba(6,214,160,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="obstruction"] { 
+            border-color: var(--accent-orange); 
+            background: linear-gradient(135deg, rgba(255,140,66,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="anaphylaxie"] { 
+            border-color: var(--accent-purple); 
+            background: linear-gradient(135deg, rgba(157,78,221,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="asthme"] { 
+            border-color: var(--accent-cyan); 
+            background: linear-gradient(135deg, rgba(0,245,212,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="infarctus"] { 
+            border-color: var(--accent-pink); 
+            background: linear-gradient(135deg, rgba(255,105,180,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="avc"] { 
+            border-color: var(--accent-blue); 
+            background: linear-gradient(135deg, rgba(17,138,178,0.1) 0%, var(--bg-card) 100%); 
+        }
+        [data-theme="light"] .emergency-btn[data-type="epilepsie"] { 
+            border-color: var(--accent-yellow); 
+            background: linear-gradient(135deg, rgba(255,209,102,0.1) 0%, var(--bg-card) 100%); 
+        }
+
+        [data-theme="light"] .info-144-box {
+            background: linear-gradient(135deg, rgba(255,59,92,0.08) 0%, var(--bg-card) 100%);
+        }
+
+        [data-theme="light"] .header {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, transparent 100%);
+        }
+
+        [data-theme="light"] .step-highlight {
+            background: rgba(255,209,102,0.12);
+            border-color: rgba(255,209,102,0.4);
+        }
+
+        [data-theme="light"] .step-dosage {
+            background: rgba(157,78,221,0.1);
+            border-color: rgba(157,78,221,0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -124,6 +187,35 @@
 
         .call-144-header:active {
             transform: scale(0.95);
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        [data-theme="light"] .theme-toggle {
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Main content */
@@ -755,9 +847,14 @@
                     <div class="logo-icon">🦷</div>
                     <span>Urgences Dentaires</span>
                 </div>
-                <a href="tel:144" class="call-144-header">
-                    📞 144
-                </a>
+                <div class="header-right">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème">
+                        <span id="theme-icon">☀️</span>
+                    </button>
+                    <a href="tel:144" class="call-144-header">
+                        📞 144
+                    </a>
+                </div>
             </div>
         </header>
 
@@ -975,6 +1072,31 @@
     </div>
 
     <script>
+        // Theme management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        // Initialize theme on load
+        initTheme();
+
         // Emergency data
         const emergencies = {
             acr: {
