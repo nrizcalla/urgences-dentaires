@@ -692,6 +692,42 @@
             cursor: pointer;
         }
 
+        /* Info 144 box */
+        .info-144-box {
+            background: linear-gradient(135deg, rgba(255,59,92,0.15) 0%, var(--bg-card) 100%);
+            border: 1px solid var(--accent-red);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .info-144-box h4 {
+            color: var(--accent-red);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-144-list {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .info-144-list .num {
+            color: var(--accent-red);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .info-144-list .label {
+            color: var(--text-secondary);
+        }
+
         /* Responsive */
         @media (min-width: 500px) {
             .emergency-grid {
@@ -735,9 +771,9 @@
                 </div>
 
                 <div class="emergency-grid">
-                    <button class="emergency-btn" data-type="acr" onclick="showEmergency('acr')">
-                        <span class="icon">🫀</span>
-                        <span class="label">Arrêt Cardiaque</span>
+                    <button class="emergency-btn" data-type="syncope" onclick="showEmergency('syncope')">
+                        <span class="icon">😵</span>
+                        <span class="label">Syncope</span>
                     </button>
                     <button class="emergency-btn" data-type="obstruction" onclick="showEmergency('obstruction')">
                         <span class="icon">🫁</span>
@@ -755,6 +791,10 @@
                         <span class="icon">💔</span>
                         <span class="label">Infarctus / SCA</span>
                     </button>
+                    <button class="emergency-btn" data-type="acr" onclick="showEmergency('acr')">
+                        <span class="icon">🫀</span>
+                        <span class="label">Arrêt Cardiaque</span>
+                    </button>
                     <button class="emergency-btn" data-type="avc" onclick="showEmergency('avc')">
                         <span class="icon">🧠</span>
                         <span class="label">AVC</span>
@@ -762,10 +802,6 @@
                     <button class="emergency-btn" data-type="epilepsie" onclick="showEmergency('epilepsie')">
                         <span class="icon">⚡</span>
                         <span class="label">Épilepsie</span>
-                    </button>
-                    <button class="emergency-btn" data-type="syncope" onclick="showEmergency('syncope')">
-                        <span class="icon">😵</span>
-                        <span class="label">Syncope</span>
                     </button>
                 </div>
 
@@ -803,6 +839,17 @@
                     <div class="timer-controls">
                         <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle">▶️</button>
                         <button class="timer-btn" onclick="resetTimer()">🔄</button>
+                    </div>
+                </div>
+
+                <div class="info-144-box">
+                    <h4>📞 Infos à transmettre au 144</h4>
+                    <div class="info-144-list">
+                        <span class="num">1.</span><span class="label"><strong>Qui</strong> — Votre nom, fonction</span>
+                        <span class="num">2.</span><span class="label"><strong>Où</strong> — Adresse précise du cabinet</span>
+                        <span class="num">3.</span><span class="label"><strong>Quoi</strong> — Description de la situation</span>
+                        <span class="num">4.</span><span class="label"><strong>Patient</strong> — Âge, sexe</span>
+                        <span class="num">5.</span><span class="label"><strong>Fait</strong> — Gestes déjà entrepris</span>
                     </div>
                 </div>
 
@@ -949,8 +996,13 @@
                     },
                     {
                         title: "Débuter le massage cardiaque",
-                        content: "30 compressions au milieu du thorax, puis 2 insufflations. Profondeur 5-6 cm, fréquence 100-120/min.",
+                        content: "ADULTE : 30 compressions au milieu du thorax, puis 2 insufflations. Profondeur 5-6 cm, fréquence 100-120/min.",
                         highlight: "🎵 Rythme \"Staying Alive\" (110 BPM)"
+                    },
+                    {
+                        title: "⚠️ Si ENFANT — Spécificités",
+                        content: "• Commencer par 5 INSUFFLATIONS d'abord\n• Puis alterner 15 compressions / 2 insufflations\n• Profondeur : 1/3 du thorax\n• Si seul sans téléphone : 1 min de RCP avant d'appeler",
+                        highlight: "Ratio 15:2 chez l'enfant (pas 30:2)"
                     },
                     {
                         title: "Utiliser le DAE",
@@ -958,7 +1010,7 @@
                     },
                     {
                         title: "Continuer jusqu'aux secours",
-                        content: "Alterner 30 compressions / 2 insufflations. Ne jamais abandonner. Relayer si fatigue.",
+                        content: "Alterner compressions / insufflations. Ne jamais abandonner. Relayer si fatigue.",
                         highlight: "Chaque minute compte !"
                     }
                 ]
@@ -1006,9 +1058,10 @@
                         highlight: "Dégradation possible et EXPLOSIVE"
                     },
                     {
-                        title: "ADRÉNALINE immédiate",
-                        content: "Injection IM face antérolatérale de la cuisse. À travers les vêtements si nécessaire.",
-                        dosage: "Adulte : 0.3 mg (EpiPen)\nEnfant : 0.15 mg"
+                        title: "ADRÉNALINE immédiate — Technique EpiPen",
+                        content: "1. Saisir l'EpiPen, bout ORANGE vers le bas\n2. Retirer le bouchon BLEU\n3. ⚠️ NE PAS mettre le pouce sur l'extrémité\n4. Piquer dans la cuisse externe (à travers les vêtements si besoin)\n5. Maintenir 3 secondes",
+                        highlight: "🔵 Bleu vers le ciel, 🟠 Orange dans la cuisse",
+                        dosage: "Adulte : 0.3 mg\nEnfant : 0.15 mg"
                     },
                     {
                         title: "Appeler le 144",
@@ -1054,12 +1107,11 @@
                     {
                         title: "Évaluer l'évolution",
                         content: "Amélioration → surveillance. Persistance → renouveler Ventolin 2 bouffées.",
-                        highlight: "Appel 144 si : cyanose, sueur, tirage, ne peut pas parler"
                     },
                     {
                         title: "Signes de gravité → 144",
-                        content: "O2 à 9L/min, surveiller FR et SpO2. Possibilité Terbutaline 0.5mg SC sur avis 144.",
-                        highlight: "L'adrénaline fonctionne aussi (bronchodilatateur)"
+                        content: "Appeler immédiatement si présence de signes de gravité. O2 à 9L/min, surveiller FR et SpO2.",
+                        highlight: "⚠️ SIGNES DE GRAVITÉ :\n• Cyanose (lèvres/doigts bleus)\n• Sueurs profuses\n• Tirage intercostal/sus-sternal\n• Silence auscultatoire\n• Confusion\n• Ne peut pas parler\n• FR < 8/min ou > 30/min"
                     }
                 ]
             },
@@ -1137,13 +1189,14 @@
                 color: "var(--accent-yellow)",
                 steps: [
                     {
-                        title: "Protéger le patient",
-                        content: "Éloigner les objets dangereux. Amortir la tête si possible. NE PAS essayer de maintenir le patient.",
-                        highlight: "NE RIEN METTRE DANS LA BOUCHE"
+                        title: "Reconnaître la crise",
+                        content: "Signes caractéristiques d'une crise tonico-clonique :",
+                        highlight: "• Début BRUTAL\n• Phase tonique (raideur)\n• Phase clonique (secousses)\n• Perte de connaissance\n• Possible perte d'urine\n• Possible morsure de langue\n• Phase post-critique (confusion)"
                     },
                     {
-                        title: "Libérer l'espace",
-                        content: "Écarter les objets, desserrer col/ceinture. Laisser la crise se dérouler.",
+                        title: "Protéger le patient",
+                        content: "Éloigner les objets dangereux. Amortir la tête si possible. NE PAS essayer de maintenir le patient.",
+                        highlight: "⛔ NE RIEN METTRE DANS LA BOUCHE"
                     },
                     {
                         title: "Noter l'heure de début",
@@ -1151,17 +1204,17 @@
                         highlight: "⏰ Déclencher le chrono"
                     },
                     {
-                        title: "Après la crise — PLS",
-                        content: "Position latérale de sécurité. Surveiller la respiration. Phase post-critique : confusion normale.",
+                        title: "Libérer l'espace",
+                        content: "Écarter les objets, desserrer col/ceinture. Laisser la crise se dérouler.",
                     },
                     {
-                        title: "Rassurer le patient",
-                        content: "Au réveil, parler calmement. Le patient peut être confus et fatigué.",
+                        title: "Après la crise — PLS",
+                        content: "Position latérale de sécurité. Surveiller la respiration. Phase post-critique : confusion normale, rassurer le patient.",
                     },
                     {
                         title: "Quand appeler le 144 ?",
-                        content: "1ère crise, crise > 5 min, crises répétées, traumatisme associé, pas de récupération.",
-                        highlight: "Seuil d'appel BAS"
+                        content: "Appeler immédiatement si :",
+                        highlight: "• 1ère crise (inaugurale)\n• Crise > 5 minutes\n• Crises répétées\n• Traumatisme associé\n• Pas de récupération"
                     }
                 ]
             },
@@ -1182,13 +1235,13 @@
                         content: "Desserrer col, ceinture. Vérifier la respiration.",
                     },
                     {
-                        title: "Évaluer la récupération",
-                        content: "Syncope vagale = récupération rapide (< 1 min). Pâleur, puis retour des couleurs.",
-                        highlight: "Penser à l'hypoglycémie"
+                        title: "Diagnostic différentiel",
+                        content: "Penser à exclure d'autres causes :",
+                        highlight: "• Hypoglycémie\n• Crise d'épilepsie\n• Trouble du rythme cardiaque\n• Anaphylaxie débutante"
                     },
                     {
-                        title: "Si récupération rapide",
-                        content: "Rassurer, proposer eau sucrée. Garder allongé quelques minutes avant de se relever.",
+                        title: "Évaluer la récupération",
+                        content: "Syncope vagale = récupération rapide (< 1 min). Pâleur, puis retour des couleurs. Si hypoglycémie suspectée → donner du sucre.",
                     },
                     {
                         title: "Appeler 144 si...",
