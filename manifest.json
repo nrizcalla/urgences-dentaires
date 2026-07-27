@@ -1,11 +1,12 @@
 {
-  "name": "Urgences Cabinet Dentaire",
+  "name": "Urgences Cabinet — Guide Médical",
   "short_name": "Urgences",
-  "description": "Guide d'urgences vitales pour cabinet dentaire",
-  "start_url": "/",
+  "description": "Guide de prise en charge des urgences médicales au cabinet dentaire",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0d0d14",
-  "theme_color": "#1a1a2e",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
   "orientation": "portrait",
   "icons": [
     {

@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0a0e1a">
@@ -153,6 +153,7 @@
            ============================================ */
         .header {
             padding: 14px 20px;
+            padding-top: calc(14px + env(safe-area-inset-top));
             background: var(--bg-base);
             border-bottom: 1px solid var(--border-subtle);
             flex-shrink: 0;
@@ -459,12 +460,6 @@
             height: 26px;
         }
 
-        .emergency-icon .emoji {
-            font-size: 1.6rem;
-            line-height: 1;
-            font-family: -apple-system, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-        }
-
         .emergency-card.tier-critical .emergency-icon {
             background: rgba(255,255,255,0.1);
             border-color: rgba(255,255,255,0.15);
@@ -506,6 +501,7 @@
         }
         .emergency-card[data-color="metabolic"] .emergency-icon svg { color: #10b981; }
 
+        [data-theme="light"] .emergency-card[data-color="allergic"] .emergency-icon svg { color: #c026d3; }
         [data-theme="light"] .emergency-card[data-color="cardiac"] .emergency-icon svg { color: #dc2626; }
         [data-theme="light"] .emergency-card[data-color="respiratory"] .emergency-icon svg { color: #0891b2; }
         [data-theme="light"] .emergency-card[data-color="neuro"] .emergency-icon svg { color: #7c3aed; }
@@ -1221,9 +1217,21 @@
             border-color: var(--emergency-border);
         }
 
-        .diag-option-emoji {
-            font-size: 1.3rem;
+        .diag-option-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+        }
+
+        .diag-option-icon svg {
+            width: 17px;
+            height: 17px;
         }
 
         .diag-option-text {
@@ -1261,7 +1269,7 @@
            ============================================ */
         .call-fab {
             position: fixed;
-            bottom: 16px;
+            bottom: calc(16px + env(safe-area-inset-bottom));
             left: 16px;
             right: 16px;
             background: var(--emergency);
@@ -1343,6 +1351,169 @@
             gap: 10px;
         }
 
+        /* ============================================
+           NEW CATEGORY ACCENTS (trauma / toxic / anxiety)
+           ============================================ */
+        .emergency-card[data-color="trauma"] .emergency-icon {
+            background: rgba(234,88,12,0.12);
+            border-color: rgba(234,88,12,0.3);
+        }
+        .emergency-card[data-color="trauma"] .emergency-icon svg { color: #fb923c; }
+
+        .emergency-card[data-color="toxic"] .emergency-icon {
+            background: rgba(217,119,6,0.12);
+            border-color: rgba(217,119,6,0.3);
+        }
+        .emergency-card[data-color="toxic"] .emergency-icon svg { color: #fbbf24; }
+
+        .emergency-card[data-color="anxiety"] .emergency-icon {
+            background: rgba(14,165,233,0.12);
+            border-color: rgba(14,165,233,0.3);
+        }
+        .emergency-card[data-color="anxiety"] .emergency-icon svg { color: #38bdf8; }
+
+        [data-theme="light"] .emergency-card[data-color="trauma"] .emergency-icon svg { color: #ea580c; }
+        [data-theme="light"] .emergency-card[data-color="toxic"] .emergency-icon svg { color: #b45309; }
+        [data-theme="light"] .emergency-card[data-color="anxiety"] .emergency-icon svg { color: #0284c7; }
+
+        .emergency-card[data-color="allergic"]:not(.tier-critical) .emergency-icon {
+            background: rgba(192,38,211,0.12);
+            border-color: rgba(192,38,211,0.3);
+        }
+        .emergency-card[data-color="allergic"]:not(.tier-critical) .emergency-icon svg { color: #e879f9; }
+        [data-theme="light"] .emergency-card[data-color="allergic"]:not(.tier-critical) .emergency-icon svg { color: #c026d3; }
+
+        /* ============================================
+           STEP PROGRESS
+           ============================================ */
+        .steps-progress {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg-base);
+            padding: 10px 0;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .steps-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .steps-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--emergency) 0%, var(--emergency-bright) 100%);
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        .steps-progress-fill.done {
+            background: var(--acc-success);
+        }
+
+        .steps-progress-count {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           METRONOME MODE TOGGLE
+           ============================================ */
+        .metro-mode {
+            display: flex;
+            gap: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius);
+            padding: 3px;
+            margin-bottom: 20px;
+        }
+
+        .metro-mode-btn {
+            padding: 8px 18px;
+            border-radius: calc(var(--radius) - 3px);
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            transition: all 0.15s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .metro-mode-btn.active {
+            background: var(--emergency);
+            color: white;
+        }
+
+        /* ============================================
+           ACCESSIBILITY & MOTION
+           ============================================ */
+        :focus-visible {
+            outline: 2px solid var(--info);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            .metronome-display.beat,
+            .metronome-display.beat-strong {
+                transform: none;
+            }
+        }
+
+        /* Desktop hover states */
+        @media (hover: hover) {
+            .emergency-card:hover,
+            .tool-card:hover,
+            .diag-helper-btn:hover,
+            .diag-option:hover {
+                background: var(--bg-card-hover);
+                border-color: var(--border-default);
+            }
+            .icon-btn:hover,
+            .back-btn:hover,
+            .timer-btn:hover {
+                background: var(--bg-card-hover);
+                color: var(--text-primary);
+            }
+            .call-144-btn:hover,
+            .call-fab:hover,
+            .install-btn:hover {
+                background: var(--emergency-bright);
+            }
+        }
+
+        #theme-icon {
+            display: flex;
+        }
+
+        #theme-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .step-callout-icon svg {
+            width: 15px;
+            height: 15px;
+            display: block;
+            margin-top: 2px;
+        }
+
         /* Responsive */
         @media (min-width: 600px) {
             .screen { padding: 0 24px 100px; }
@@ -1378,7 +1549,7 @@
                 </div>
                 <div class="header-actions">
                     <button class="icon-btn" onclick="toggleTheme()" title="Changer thème" aria-label="Thème">
-                        <span id="theme-icon">☀</span>
+                        <span id="theme-icon"></span>
                     </button>
                     <a href="tel:144" class="call-144-btn">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -1414,18 +1585,14 @@
                 <div class="section-label">Pronostic vital — agir immédiatement</div>
                 <div class="emergency-grid critical">
                     <button class="emergency-card tier-critical" data-color="cardiac" onclick="showEmergency('acr')">
-                        <div class="emergency-icon">
-                            <span class="emoji">🫀</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="heart-pulse"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Arrêt cardiaque</div>
                             <div class="emergency-meta">RCP · DAE · 144</div>
                         </div>
                     </button>
                     <button class="emergency-card tier-critical" data-color="allergic" onclick="showEmergency('anaphylaxie')">
-                        <div class="emergency-icon">
-                            <span class="emoji">💉</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="syringe"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Anaphylaxie</div>
                             <div class="emergency-meta">Adrénaline · IM · 144</div>
@@ -1436,57 +1603,77 @@
                 <div class="section-label">Urgences fréquentes</div>
                 <div class="emergency-grid">
                     <button class="emergency-card" data-color="metabolic" onclick="showEmergency('syncope')">
-                        <div class="emergency-icon">
-                            <span class="emoji">😵</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="gauge"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Syncope</div>
                             <div class="emergency-meta">Malaise vagal</div>
                         </div>
                     </button>
                     <button class="emergency-card" data-color="respiratory" onclick="showEmergency('obstruction')">
-                        <div class="emergency-icon">
-                            <span class="emoji">🫁</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="ban"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Obstruction VA</div>
                             <div class="emergency-meta">Heimlich</div>
                         </div>
                     </button>
                     <button class="emergency-card" data-color="respiratory" onclick="showEmergency('asthme')">
-                        <div class="emergency-icon">
-                            <span class="emoji">🌬️</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="wind"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Crise d'asthme</div>
                             <div class="emergency-meta">Ventolin</div>
                         </div>
                     </button>
                     <button class="emergency-card" data-color="cardiac" onclick="showEmergency('infarctus')">
-                        <div class="emergency-icon">
-                            <span class="emoji">💔</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="heart-crack"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">SCA / Infarctus</div>
                             <div class="emergency-meta">Aspirine · TNT</div>
                         </div>
                     </button>
                     <button class="emergency-card" data-color="neuro" onclick="showEmergency('avc')">
-                        <div class="emergency-icon">
-                            <span class="emoji">🧠</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="brain"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">AVC</div>
                             <div class="emergency-meta">BE-FAST</div>
                         </div>
                     </button>
                     <button class="emergency-card" data-color="neuro" onclick="showEmergency('epilepsie')">
-                        <div class="emergency-icon">
-                            <span class="emoji">⚡</span>
-                        </div>
+                        <div class="emergency-icon" data-icon="zap"></div>
                         <div class="emergency-info">
                             <div class="emergency-name">Épilepsie</div>
                             <div class="emergency-meta">Tonico-clonique</div>
+                        </div>
+                    </button>
+                    <button class="emergency-card" data-color="metabolic" onclick="showEmergency('hypoglycemie')">
+                        <div class="emergency-icon" data-icon="trending-down"></div>
+                        <div class="emergency-info">
+                            <div class="emergency-name">Hypoglycémie</div>
+                            <div class="emergency-meta">Resucrage</div>
+                        </div>
+                    </button>
+                    <button class="emergency-card" data-color="anxiety" onclick="showEmergency('angoisse')">
+                        <div class="emergency-icon" data-icon="waves"></div>
+                        <div class="emergency-info">
+                            <div class="emergency-name">Crise d'angoisse</div>
+                            <div class="emergency-meta">Hyperventilation</div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="section-label">Spécifique cabinet</div>
+                <div class="emergency-grid">
+                    <button class="emergency-card" data-color="trauma" onclick="showEmergency('hemorragie')">
+                        <div class="emergency-icon" data-icon="droplets"></div>
+                        <div class="emergency-info">
+                            <div class="emergency-name">Hémorragie</div>
+                            <div class="emergency-meta">Post-extraction</div>
+                        </div>
+                    </button>
+                    <button class="emergency-card" data-color="toxic" onclick="showEmergency('surdosage')">
+                        <div class="emergency-icon" data-icon="flask"></div>
+                        <div class="emergency-info">
+                            <div class="emergency-name">Surdosage AL</div>
+                            <div class="emergency-meta">Toxicité anesthésique</div>
                         </div>
                     </button>
                 </div>
@@ -1508,7 +1695,7 @@
                 </div>
 
                 <div class="install-prompt" id="install-prompt">
-                    <p>Installez l'app pour un accès hors-ligne</p>
+                    <p id="install-text">Installez l'app pour un accès hors-ligne</p>
                     <button class="install-btn" id="install-btn">Installer</button>
                 </div>
             </section>
@@ -1517,7 +1704,7 @@
             <section id="diagnostic-screen" class="screen">
                 <div class="detail-header">
                     <div class="detail-nav">
-                        <button class="back-btn" onclick="showScreen('home-screen')" aria-label="Retour">
+                        <button class="back-btn" onclick="goHome()" aria-label="Retour">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
                         <div>
@@ -1534,7 +1721,7 @@
             <section id="detail-screen" class="screen">
                 <div class="detail-header">
                     <div class="detail-nav">
-                        <button class="back-btn" onclick="showScreen('home-screen')" aria-label="Retour">
+                        <button class="back-btn" onclick="goHome()" aria-label="Retour">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
                         <div>
@@ -1576,6 +1763,13 @@
                     </div>
                 </div>
 
+                <div class="steps-progress">
+                    <div class="steps-progress-bar">
+                        <div class="steps-progress-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="steps-progress-count" id="progress-count">0 / 0</span>
+                </div>
+
                 <div class="steps" id="steps-container"></div>
             </section>
 
@@ -1583,7 +1777,7 @@
             <section id="metronome-screen" class="screen">
                 <div class="detail-header">
                     <div class="detail-nav">
-                        <button class="back-btn" onclick="showScreen('home-screen')" aria-label="Retour">
+                        <button class="back-btn" onclick="goHome()" aria-label="Retour">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
                         <div>
@@ -1599,6 +1793,11 @@
                 </div>
 
                 <div class="metronome-stage">
+                    <div class="metro-mode" role="group" aria-label="Mode RCP">
+                        <button class="metro-mode-btn active" id="mode-adult" onclick="setMetroMode('adult')">Adulte 30:2</button>
+                        <button class="metro-mode-btn" id="mode-child" onclick="setMetroMode('child')">Enfant 15:2</button>
+                    </div>
+
                     <div class="metronome-phase-label" id="metronome-phase">COMPRESSIONS</div>
                     <div class="metronome-display" id="metronome-visual">
                         <div class="metronome-count" id="metronome-count">30</div>
@@ -1612,16 +1811,24 @@
 
                     <div class="metronome-info-card">
                         <div class="metronome-info-row">
-                            <span class="metronome-info-label">Cycle</span>
-                            <span class="metronome-info-value">30 : 2</span>
+                            <span class="metronome-info-label">Ratio</span>
+                            <span class="metronome-info-value" id="metro-ratio">30 : 2</span>
                         </div>
                         <div class="metronome-info-row">
                             <span class="metronome-info-label">Profondeur</span>
-                            <span class="metronome-info-value">5–6 cm</span>
+                            <span class="metronome-info-value" id="metro-depth">5–6 cm</span>
                         </div>
                         <div class="metronome-info-row">
                             <span class="metronome-info-label">Fréquence</span>
                             <span class="metronome-info-value">100–120 / min</span>
+                        </div>
+                        <div class="metronome-info-row">
+                            <span class="metronome-info-label">Cycles effectués</span>
+                            <span class="metronome-info-value" id="metro-cycles">0</span>
+                        </div>
+                        <div class="metronome-info-row">
+                            <span class="metronome-info-label">Durée</span>
+                            <span class="metronome-info-value" id="metro-elapsed">00:00</span>
                         </div>
                     </div>
 
@@ -1636,7 +1843,7 @@
             <section id="trousse-screen" class="screen">
                 <div class="detail-header">
                     <div class="detail-nav">
-                        <button class="back-btn" onclick="showScreen('home-screen')" aria-label="Retour">
+                        <button class="back-btn" onclick="goHome()" aria-label="Retour">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
                         <div>
@@ -1696,7 +1903,17 @@
                             <div class="trousse-item-name">Glucose / Sucre</div>
                             <div class="trousse-item-detail">Hypoglycémie · PO si conscient</div>
                         </div>
-                        <div class="trousse-item-dose">Sucre, jus</div>
+                        <div class="trousse-item-dose">15–20 g</div>
+                    </div>
+                    <div class="trousse-item">
+                        <div class="trousse-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>
+                        </div>
+                        <div>
+                            <div class="trousse-item-name">Acide tranexamique (Cyklokapron)</div>
+                            <div class="trousse-item-detail">Hémorragie post-extraction · Compresse imbibée</div>
+                        </div>
+                        <div class="trousse-item-dose">Local · 500 mg</div>
                     </div>
                 </div>
 
@@ -1742,6 +1959,16 @@
                         </div>
                         <div class="trousse-item-dose">PA</div>
                     </div>
+                    <div class="trousse-item">
+                        <div class="trousse-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                        </div>
+                        <div>
+                            <div class="trousse-item-name">Compresses stériles</div>
+                            <div class="trousse-item-detail">Compression hémorragie · Mordre 15–20 min</div>
+                        </div>
+                        <div class="trousse-item-dose">Stock</div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -1754,23 +1981,60 @@
 
     <script>
         // ============================================
+        // ICONS (Lucide-style stroke icons)
+        // ============================================
+        const ICONS = {
+            'heart-pulse': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>',
+            'syringe': '<path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/>',
+            'gauge': '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
+            'ban': '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>',
+            'wind': '<path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/>',
+            'heart-crack': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><path d="m12 13-1-1 2-2-3-3 2-2"/>',
+            'brain': '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>',
+            'zap': '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+            'trending-down': '<polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/>',
+            'waves': '<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>',
+            'droplets': '<path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>',
+            'flask': '<path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/>',
+            'eye': '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
+            'eye-off': '<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>',
+            'alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 20h16a2 2 0 0 0 1.73-2Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+            'pill': '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>',
+            'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+            'moon': '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'
+        };
+
+        function icon(name) {
+            return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
+        }
+
+        // Hydrate static [data-icon] elements
+        document.querySelectorAll('[data-icon]').forEach(el => {
+            el.innerHTML = icon(el.dataset.icon);
+        });
+
+        // ============================================
         // THEME
         // ============================================
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            updateThemeIcon(theme);
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', theme === 'light' ? '#fafaf8' : '#0a0e1a');
+        }
         function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
+            const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
-            updateThemeIcon(next);
+            applyTheme(next);
         }
         function updateThemeIcon(theme) {
-            document.getElementById('theme-icon').textContent = theme === 'light' ? '☾' : '☀';
+            document.getElementById('theme-icon').innerHTML = icon(theme === 'light' ? 'moon' : 'sun');
         }
         function initTheme() {
-            const saved = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', saved);
-            updateThemeIcon(saved);
+            const saved = localStorage.getItem('theme');
+            const preferred = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            applyTheme(saved || preferred);
         }
         initTheme();
 
@@ -1807,7 +2071,7 @@
                 tag: "Urgence vitale",
                 steps: [
                     { title: "Reconnaître l'anaphylaxie", content: "Début rapide après exposition. Signes : urticaire, œdème, dyspnée, sifflements, hypotension, malaise.", warning: "Dégradation possible et EXPLOSIVE" },
-                    { title: "ADRÉNALINE — Technique EpiPen", content: "1. Saisir l'EpiPen, bout ORANGE vers le bas\n2. Retirer le bouchon BLEU\n3. ⚠️ NE PAS mettre le pouce sur l'extrémité\n4. Piquer dans la cuisse externe (à travers les vêtements si besoin)\n5. Maintenir 3 secondes", warning: "🔵 Bleu vers le ciel · 🟠 Orange dans la cuisse", dosage: "Adulte : 0.3 mg\nEnfant : 0.15 mg" },
+                    { title: "ADRÉNALINE — Technique EpiPen", content: "1. Saisir l'EpiPen, bout ORANGE vers le bas\n2. Retirer le bouchon BLEU\n3. NE PAS mettre le pouce sur l'extrémité\n4. Piquer dans la cuisse externe (à travers les vêtements si besoin)\n5. Maintenir 3 secondes", warning: "BLEU vers le ciel · ORANGE dans la cuisse", dosage: "Adulte : 0.3 mg\nEnfant : 0.15 mg" },
                     { title: "Appeler le 144", content: "Urgence vitale, transport médicalisé nécessaire.", warning: "Appel IMMÉDIAT" },
                     { title: "Position adaptée", content: "Allonger le patient, jambes surélevées. Si dyspnée : position demi-assise." },
                     { title: "Oxygène haut débit", content: "Si disponible, administrer O2 au masque." },
@@ -1845,7 +2109,7 @@
                     { title: "Sécurité et conscience", content: "Vérifier la sécurité de l'environnement. Stimuler le patient : « Est-ce que ça va ? »" },
                     { title: "Appeler à l'aide", content: "Crier pour alerter l'équipe. Demander le DAE.", warning: "Appeler le 144 immédiatement" },
                     { title: "Libérer les voies aériennes", content: "Basculer la tête en arrière, soulever le menton. Vérifier la respiration (10 sec max)." },
-                    { title: "Débuter le massage cardiaque", content: "ADULTE : 30 compressions au milieu du thorax, puis 2 insufflations. Profondeur 5–6 cm, fréquence 100–120/min.", warning: "🎵 Rythme « Staying Alive » (110 BPM)" },
+                    { title: "Débuter le massage cardiaque", content: "ADULTE : 30 compressions au milieu du thorax, puis 2 insufflations. Profondeur 5–6 cm, fréquence 100–120/min.", warning: "Rythme « Staying Alive » (110 BPM) — utilisez le métronome de l'app" },
                     { title: "Si ENFANT — Spécificités", content: "• Commencer par 5 INSUFFLATIONS d'abord\n• Puis alterner 15 compressions / 2 insufflations\n• Profondeur : 1/3 du thorax\n• Si seul sans téléphone : 1 min de RCP avant d'appeler", warning: "Ratio 15:2 chez l'enfant (pas 30:2)" },
                     { title: "Utiliser le DAE", content: "Dès qu'il arrive : allumer, poser les électrodes sur peau nue, suivre les instructions vocales." },
                     { title: "Continuer jusqu'aux secours", content: "Alterner compressions / insufflations. Ne jamais abandonner. Relayer si fatigue.", warning: "Chaque minute compte !" }
@@ -1856,7 +2120,7 @@
                 tag: "Urgence neurologique",
                 steps: [
                     { title: "Reconnaître — Test BE-FAST", content: "B: Balance (équilibre)\nE: Eyes (vision)\nF: Face (asymétrie)\nA: Arms (faiblesse)\nS: Speech (parole)\nT: Time (appeler !)", warning: "Déficit neurologique BRUTAL = AVC" },
-                    { title: "Noter l'heure de début", content: "CRUCIAL pour la décision de thrombolyse. Noter l'heure exacte d'apparition des symptômes.", warning: "⏰ NOTER L'HEURE !" },
+                    { title: "Noter l'heure de début", content: "CRUCIAL pour la décision de thrombolyse. Noter l'heure exacte d'apparition des symptômes.", warning: "NOTER L'HEURE — le chronomètre de l'app tourne déjà" },
                     { title: "Appeler le 144", content: "Urgence neurologique temps-dépendante.", warning: "APPEL IMMÉDIAT" },
                     { title: "Position adaptée", content: "Installer au repos, tête légèrement surélevée (30°). Ne rien donner à boire ni manger." },
                     { title: "Surveillance continue", content: "Surveiller conscience, respiration. Rassurer le patient." },
@@ -1868,11 +2132,59 @@
                 tag: "Urgence neurologique",
                 steps: [
                     { title: "Reconnaître la crise", content: "Signes caractéristiques d'une crise tonico-clonique :", warning: "• Début BRUTAL\n• Phase tonique (raideur)\n• Phase clonique (secousses)\n• Perte de connaissance\n• Possible perte d'urine\n• Possible morsure de langue\n• Phase post-critique (confusion)" },
-                    { title: "Protéger le patient", content: "Éloigner les objets dangereux. Amortir la tête si possible. NE PAS essayer de maintenir le patient.", warning: "⛔ NE RIEN METTRE DANS LA BOUCHE" },
-                    { title: "Noter l'heure de début", content: "Important pour évaluer la durée de la crise.", warning: "⏰ Déclencher le chrono" },
+                    { title: "Protéger le patient", content: "Éloigner les objets dangereux. Amortir la tête si possible. NE PAS essayer de maintenir le patient.", warning: "NE RIEN METTRE DANS LA BOUCHE" },
+                    { title: "Noter l'heure de début", content: "Important pour évaluer la durée de la crise.", warning: "Le chronomètre en haut de l'écran tourne déjà" },
                     { title: "Libérer l'espace", content: "Écarter les objets, desserrer col/ceinture. Laisser la crise se dérouler." },
                     { title: "Après la crise — PLS", content: "Position latérale de sécurité. Surveiller la respiration. Phase post-critique : confusion normale, rassurer le patient." },
                     { title: "Quand appeler le 144 ?", content: "Appeler immédiatement si :", warning: "• 1ère crise (inaugurale)\n• Crise > 5 minutes\n• Crises répétées\n• Traumatisme associé\n• Pas de récupération" }
+                ]
+            },
+            hypoglycemie: {
+                title: "Hypoglycémie",
+                tag: "Urgence métabolique",
+                steps: [
+                    { title: "Reconnaître l'hypoglycémie", content: "Patient diabétique connu (insuline, sulfamides) ou à jeun prolongé.", warning: "• Sueurs, pâleur, tremblements\n• Faim intense\n• Confusion, comportement inhabituel\n• Troubles de la concentration\n• Vertiges, palpitations" },
+                    { title: "Arrêter le soin", content: "Interrompre le traitement. Installer le patient confortablement." },
+                    { title: "Si CONSCIENT — Resucrage rapide", content: "Donner 15–20 g de sucre rapide par voie orale.", dosage: "4 morceaux de sucre\nou 2 dl de jus de fruit / soda non light" },
+                    { title: "Réévaluer après 15 minutes", content: "Si les symptômes persistent → renouveler le resucrage (15–20 g). Une fois amélioré, donner un sucre lent (pain, biscuit) pour éviter la rechute." },
+                    { title: "Si INCONSCIENT", content: "NE RIEN donner par la bouche (risque de fausse route). Position latérale de sécurité. Appeler le 144.", warning: "Rien par voie orale si troubles de la conscience" },
+                    { title: "Appeler 144 si...", content: "Pas d'amélioration après resucrage, troubles de la conscience, convulsions, patient sous sulfamides (risque de récidive prolongée)." }
+                ]
+            },
+            angoisse: {
+                title: "Crise d'angoisse / hyperventilation",
+                tag: "Fréquent au cabinet",
+                steps: [
+                    { title: "Reconnaître la crise", content: "Contexte anxieux (peur des soins), respiration rapide et superficielle.", warning: "• Picotements des mains, pieds, lèvres\n• Spasme carpo-pédal (mains crispées)\n• Oppression thoracique, palpitations\n• Sensation d'étouffement\n• Vertiges, tremblements" },
+                    { title: "Arrêter le soin", content: "Retirer le matériel de la bouche. Position demi-assise. Environnement calme, limiter les personnes autour." },
+                    { title: "Rassurer et guider la respiration", content: "Parler calmement. Faire respirer lentement : inspirer par le nez 4 secondes → expirer lentement par la bouche 6 secondes. Répéter pendant plusieurs minutes.", warning: "PAS de sac en papier — pratique abandonnée, dangereuse si cause organique" },
+                    { title: "Exclure une urgence organique", content: "L'hyperventilation est un diagnostic d'exclusion. Rechercher :", warning: "• Sifflements, antécédent d'asthme → crise d'asthme\n• Douleur thoracique constrictive → SCA\n• Urticaire, œdème → anaphylaxie\n• SpO2 basse → cause organique" },
+                    { title: "Surveiller l'évolution", content: "Amélioration progressive en 10–20 minutes avec la respiration guidée. La SpO2 reste normale dans une crise d'angoisse simple." },
+                    { title: "Appeler 144 si...", content: "Doute diagnostique, pas d'amélioration, douleur thoracique, SpO2 < 94%, trouble de la conscience." }
+                ]
+            },
+            hemorragie: {
+                title: "Hémorragie post-extraction",
+                tag: "Spécifique cabinet",
+                steps: [
+                    { title: "Installer et évaluer", content: "Patient assis, tête droite. Faire cracher / aspirer. Évaluer l'origine et l'abondance du saignement.", warning: "Vérifier : anticoagulants (Sintrom, AOD), antiagrégants, troubles de la coagulation" },
+                    { title: "Nettoyer l'alvéole", content: "Retirer le caillot friable/exubérant à la compresse. Identifier le point de saignement (alvéole, gencive, os)." },
+                    { title: "Compression locale", content: "Compresse stérile pliée sur l'alvéole. Faire mordre fermement pendant 15–20 minutes sans interruption.", warning: "Ne pas vérifier avant 15 min — chaque interruption relance le saignement" },
+                    { title: "Acide tranexamique", content: "Si persistance : compresse imbibée d'acide tranexamique (Cyklokapron), faire mordre 20 minutes.", dosage: "Ampoule 500 mg sur compresse" },
+                    { title: "Reprise chirurgicale", content: "Si échec : anesthésie locale (avec vasoconstricteur), révision de l'alvéole, matériau hémostatique (éponge de collagène), sutures." },
+                    { title: "Si persistance → urgences", content: "Saignement toujours actif malgré compression + hémostatique + sutures → adresser aux urgences (144 si abondant ou patient anticoagulé).", warning: "Consignes patient : pas de rinçage 24 h, pas d'effort, tête surélevée, froid en regard" }
+                ]
+            },
+            surdosage: {
+                title: "Surdosage anesthésique local",
+                tag: "Toxicité systémique (LAST)",
+                steps: [
+                    { title: "Reconnaître les signes précoces", content: "Survient pendant ou peu après l'injection (surtout si injection intravasculaire accidentelle ou dose cumulée élevée).", warning: "• Goût métallique\n• Paresthésies péribuccales (lèvres, langue)\n• Acouphènes, vertiges\n• Agitation, logorrhée, troubles de l'élocution\n• Somnolence" },
+                    { title: "STOP injection", content: "Arrêter immédiatement l'injection. Retirer tout matériel de la bouche. Noter la dose totale administrée." },
+                    { title: "Appeler le 144", content: "Toxicité systémique possible — évolution imprévisible vers convulsions ou troubles du rythme.", warning: "Communiquer : produit, concentration, dose totale, heure d'injection" },
+                    { title: "Oxygène + position allongée", content: "Allonger le patient. O2 haut débit au masque. Surveiller conscience, respiration, pouls, SpO2." },
+                    { title: "Si convulsions", content: "Protéger le patient (comme pour une crise d'épilepsie) : éloigner les objets, ne rien mettre dans la bouche. Les convulsions sont souvent brèves." },
+                    { title: "Si arrêt cardiaque", content: "RCP immédiate et PROLONGÉE — les ACR sur toxicité aux anesthésiques locaux peuvent récupérer après une réanimation longue (traitement hospitalier : émulsion lipidique IV).", warning: "Ne pas abandonner la RCP — poursuivre jusqu'à l'arrivée des secours" }
                 ]
             }
         };
@@ -1884,34 +2196,38 @@
             start: {
                 question: "État de conscience du patient ?",
                 options: [
-                    { emoji: "🟢", label: "Conscient", next: "conscious" },
-                    { emoji: "🔴", label: "Inconscient", next: "unconscious" }
+                    { icon: "eye", tint: "#10b981", label: "Conscient", next: "conscious" },
+                    { icon: "eye-off", tint: "#ef4444", label: "Inconscient", next: "unconscious" }
                 ]
             },
             conscious: {
                 question: "Symptôme principal ?",
                 options: [
-                    { emoji: "😮‍💨", label: "Difficulté à respirer", next: "dyspnea" },
-                    { emoji: "❤️", label: "Douleur thoracique", emergency: "infarctus" },
-                    { emoji: "🧠", label: "Déficit neurologique brutal (visage / parole / bras)", emergency: "avc" },
-                    { emoji: "🤢", label: "Malaise / vertiges / pâleur", emergency: "syncope" },
-                    { emoji: "🌡️", label: "Réaction cutanée + dyspnée", emergency: "anaphylaxie" }
+                    { icon: "wind", tint: "#06b6d4", label: "Difficulté à respirer", next: "dyspnea" },
+                    { icon: "heart-crack", tint: "#ef4444", label: "Douleur thoracique", emergency: "infarctus" },
+                    { icon: "brain", tint: "#a78bfa", label: "Déficit neurologique brutal (visage / parole / bras)", emergency: "avc" },
+                    { icon: "gauge", tint: "#10b981", label: "Malaise / vertiges / pâleur", emergency: "syncope" },
+                    { icon: "trending-down", tint: "#10b981", label: "Sueurs + tremblements · diabétique connu", emergency: "hypoglycemie" },
+                    { icon: "syringe", tint: "#e879f9", label: "Réaction cutanée + dyspnée", emergency: "anaphylaxie" },
+                    { icon: "droplets", tint: "#fb923c", label: "Saignement buccal persistant", emergency: "hemorragie" },
+                    { icon: "flask", tint: "#fbbf24", label: "Symptômes après injection d'anesthésique", emergency: "surdosage" }
                 ]
             },
             dyspnea: {
                 question: "Contexte de la dyspnée ?",
                 options: [
-                    { emoji: "🫁", label: "Antécédent d'asthme + sifflements", emergency: "asthme" },
-                    { emoji: "💉", label: "Après injection / contact allergène", emergency: "anaphylaxie" },
-                    { emoji: "🦷", label: "Inhalation/avalement instrument, dent, fragment", emergency: "obstruction" }
+                    { icon: "wind", tint: "#06b6d4", label: "Antécédent d'asthme + sifflements", emergency: "asthme" },
+                    { icon: "syringe", tint: "#e879f9", label: "Après injection / contact allergène", emergency: "anaphylaxie" },
+                    { icon: "ban", tint: "#06b6d4", label: "Inhalation/avalement instrument, dent, fragment", emergency: "obstruction" },
+                    { icon: "waves", tint: "#38bdf8", label: "Picotements mains/lèvres, contexte anxieux", emergency: "angoisse" }
                 ]
             },
             unconscious: {
                 question: "Le patient respire-t-il ?",
                 options: [
-                    { emoji: "❌", label: "Non — pas de respiration", emergency: "acr" },
-                    { emoji: "⚡", label: "Oui + mouvements tonico-cloniques", emergency: "epilepsie" },
-                    { emoji: "😵", label: "Oui + récupération possible", emergency: "syncope" }
+                    { icon: "heart-pulse", tint: "#ef4444", label: "Non — pas de respiration", emergency: "acr" },
+                    { icon: "zap", tint: "#a78bfa", label: "Oui + mouvements tonico-cloniques", emergency: "epilepsie" },
+                    { icon: "gauge", tint: "#10b981", label: "Oui + récupération possible", emergency: "syncope" }
                 ]
             }
         };
@@ -1943,7 +2259,7 @@
                     : `onclick="diagNext('${opt.next}', '${nodeKey}')"`;
                 html += `
                     <button class="diag-option" ${action}>
-                        <span class="diag-option-emoji">${opt.emoji}</span>
+                        <span class="diag-option-icon" style="color:${opt.tint}">${icon(opt.icon)}</span>
                         <span class="diag-option-text">${opt.label}</span>
                         <svg class="diag-option-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
@@ -1980,11 +2296,40 @@
         }
 
         // ============================================
+        // WAKE LOCK — keep the screen on during an emergency
+        // ============================================
+        let wakeLock = null;
+
+        async function requestWakeLock() {
+            if (!('wakeLock' in navigator) || wakeLock) return;
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => { wakeLock = null; });
+            } catch (e) {
+                wakeLock = null;
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock) {
+                wakeLock.release().catch(() => {});
+                wakeLock = null;
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && currentScreen !== 'home-screen') {
+                requestWakeLock();
+            }
+        });
+
+        // ============================================
         // SCREEN MANAGEMENT
         // ============================================
         let currentScreen = 'home-screen';
+        history.replaceState({ screen: 'home-screen' }, '');
 
-        function showScreen(screenId) {
+        function showScreen(screenId, fromPopstate = false) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             currentScreen = screenId;
@@ -2000,8 +2345,35 @@
                 stopMetronome();
             }
 
+            // History: browser back / iOS swipe navigates in-app instead of exiting
+            if (!fromPopstate && screenId !== 'home-screen') {
+                const state = history.state && history.state.screen;
+                if (state === 'home-screen') {
+                    history.pushState({ screen: screenId }, '');
+                } else if (state !== screenId) {
+                    history.replaceState({ screen: screenId }, '');
+                }
+            }
+
+            // Screen must not sleep mid-protocol / mid-RCP
+            if (screenId === 'home-screen') releaseWakeLock();
+            else requestWakeLock();
+
             document.querySelector('.main').scrollTop = 0;
         }
+
+        function goHome() {
+            if (history.state && history.state.screen && history.state.screen !== 'home-screen') {
+                history.back();
+            } else {
+                showScreen('home-screen', true);
+            }
+        }
+
+        window.addEventListener('popstate', (e) => {
+            const target = (e.state && e.state.screen) || 'home-screen';
+            showScreen(target, true);
+        });
 
         function showEmergency(type) {
             const emergency = emergencies[type];
@@ -2022,12 +2394,13 @@
                             </button>
                         </div>
                         <div class="step-description">${step.content}</div>
-                        ${step.warning ? `<div class="step-callout warning"><span class="step-callout-icon">⚠️</span><span>${step.warning}</span></div>` : ''}
-                        ${step.dosage ? `<div class="step-callout dosage"><span class="step-callout-icon">💊</span><span>${step.dosage}</span></div>` : ''}
+                        ${step.warning ? `<div class="step-callout warning"><span class="step-callout-icon">${icon('alert')}</span><span>${step.warning}</span></div>` : ''}
+                        ${step.dosage ? `<div class="step-callout dosage"><span class="step-callout-icon">${icon('pill')}</span><span>${step.dosage}</span></div>` : ''}
                     </div>
                 </div>
             `).join('');
 
+            updateProgress();
             resetTimer();
             startTimer();
             showScreen('detail-screen');
@@ -2036,18 +2409,28 @@
         function toggleStep(index) {
             const steps = document.querySelectorAll('.step');
             const step = steps[index];
-            
+
             if (step.classList.contains('completed')) {
                 step.classList.remove('completed');
             } else {
                 step.classList.add('completed');
                 step.classList.remove('current');
-                
+
                 const nextStep = document.querySelector('.step:not(.completed)');
                 if (nextStep) {
                     nextStep.classList.add('current');
                 }
             }
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = document.querySelectorAll('#steps-container .step').length;
+            const done = document.querySelectorAll('#steps-container .step.completed').length;
+            const fill = document.getElementById('progress-fill');
+            fill.style.width = total ? `${(done / total) * 100}%` : '0%';
+            fill.classList.toggle('done', total > 0 && done === total);
+            document.getElementById('progress-count').textContent = `${done} / ${total}`;
         }
 
         function toggleInfo144() {
@@ -2112,11 +2495,42 @@
         // ============================================
         // METRONOME
         // ============================================
+        const METRO_MODES = {
+            adult: { compressions: 30, breaths: 2, ratio: '30 : 2', depth: '5–6 cm' },
+            child: { compressions: 15, breaths: 2, ratio: '15 : 2', depth: '≈ 4 cm (1/3 thorax)' }
+        };
+
         let metronomeInterval = null;
         let metronomeRunning = false;
         let compressionCount = 0;
         let isCompressionPhase = true;
         let audioContext = null;
+        let metroMode = 'adult';
+        let metroCycles = 0;
+        let metroStartTime = null;
+
+        function setMetroMode(mode) {
+            metroMode = mode;
+            document.getElementById('mode-adult').classList.toggle('active', mode === 'adult');
+            document.getElementById('mode-child').classList.toggle('active', mode === 'child');
+            document.getElementById('metro-ratio').textContent = METRO_MODES[mode].ratio;
+            document.getElementById('metro-depth').textContent = METRO_MODES[mode].depth;
+            if (metronomeRunning) {
+                stopMetronome();
+                startMetronome();
+            } else {
+                updateMetronomeDisplay();
+            }
+        }
+
+        function updateMetroElapsed() {
+            if (!metroStartTime) return;
+            const total = Math.floor((Date.now() - metroStartTime) / 1000);
+            const mins = Math.floor(total / 60);
+            const secs = total % 60;
+            document.getElementById('metro-elapsed').textContent =
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
 
         function initAudio() {
             if (!audioContext) {
@@ -2146,21 +2560,26 @@
             metronomeRunning = true;
             compressionCount = 0;
             isCompressionPhase = true;
-            
+            metroCycles = 0;
+            metroStartTime = Date.now();
+            document.getElementById('metro-cycles').textContent = '0';
+            document.getElementById('metro-elapsed').textContent = '00:00';
+
             const btn = document.getElementById('metronome-btn');
             btn.classList.add('running');
             btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg><span>Arrêter</span>`;
-            
+
             updateMetronomeDisplay();
-            
+
             metronomeInterval = setInterval(() => {
+                const mode = METRO_MODES[metroMode];
                 if (isCompressionPhase) {
                     compressionCount++;
-                    const isStrong = compressionCount === 30;
+                    const isStrong = compressionCount === mode.compressions;
                     playBeep(isStrong ? 1200 : 800);
                     flashBeat(isStrong);
-                    
-                    if (compressionCount >= 30) {
+
+                    if (compressionCount >= mode.compressions) {
                         isCompressionPhase = false;
                         compressionCount = 0;
                     }
@@ -2168,13 +2587,16 @@
                     compressionCount++;
                     playBeep(600, 150);
                     flashBeat(false);
-                    
-                    if (compressionCount >= 2) {
+
+                    if (compressionCount >= mode.breaths) {
                         isCompressionPhase = true;
                         compressionCount = 0;
+                        metroCycles++;
+                        document.getElementById('metro-cycles').textContent = metroCycles;
                     }
                 }
                 updateMetronomeDisplay();
+                updateMetroElapsed();
             }, 545);
         }
 
@@ -2193,9 +2615,10 @@
             const btn = document.getElementById('metronome-btn');
             btn.classList.remove('running');
             btn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>Démarrer</span>`;
-            
+
             compressionCount = 0;
             isCompressionPhase = true;
+            metroStartTime = null;
             updateMetronomeDisplay();
         }
 
@@ -2208,21 +2631,34 @@
             const count = document.getElementById('metronome-count');
             const phase = document.getElementById('metronome-phase');
             const sub = document.getElementById('metronome-sub');
-            
+            const mode = METRO_MODES[metroMode];
+
             if (isCompressionPhase) {
                 phase.textContent = 'COMPRESSIONS';
-                count.textContent = compressionCount || 30;
-                sub.textContent = compressionCount ? `/ 30` : 'compressions';
+                count.textContent = compressionCount || mode.compressions;
+                sub.textContent = compressionCount ? `/ ${mode.compressions}` : 'compressions';
             } else {
                 phase.textContent = 'INSUFFLATIONS';
-                count.textContent = compressionCount || 2;
-                sub.textContent = compressionCount ? `/ 2` : 'insufflations';
+                count.textContent = compressionCount || mode.breaths;
+                sub.textContent = compressionCount ? `/ ${mode.breaths}` : 'insufflations';
             }
         }
 
         // ============================================
         // PWA
         // ============================================
+        // iOS Safari has no beforeinstallprompt — show manual instructions
+        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+            navigator.standalone === true;
+        if (isIOS && !isStandalone) {
+            document.getElementById('install-text').innerHTML =
+                "Installez l'app pour un accès hors-ligne : <strong>Partager</strong> → <strong>« Sur l'écran d'accueil »</strong>";
+            document.getElementById('install-btn').style.display = 'none';
+            document.getElementById('install-prompt').classList.add('show');
+        }
+
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
